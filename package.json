@@ -1,0 +1,35 @@
+{
+  "name": "mvp_artist_app",
+  "version": "1.0.0",
+  "description": "artist favorites mvp app",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "live-server": "^1.2.1",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon  server.js",
+    "build": "babel client --out-dir public --ignore node_modules --presets @babel/preset-react --source-maps inline --watch & live-server --open=./public/index.html --port=8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amandawinkles/rpt22-mvp.git"
+  },
+  "author": "amanda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amandawinkles/rpt22-mvp/issues"
+  },
+  "homepage": "https://github.com/amandawinkles/rpt22-mvp#readme"
+}
