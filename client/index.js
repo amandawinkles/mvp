@@ -1,4 +1,4 @@
-const artists = [
+const artistList = [
   {
     name: 'letha wilson',
     imageURL: 'https://www.lethaprojects.com/visuals/images/outdoors/ghostofatree-right-view.jpg'
@@ -36,6 +36,8 @@ const artists = [
     imageURL: 'https://www.vivianesassen.com/site/assets/files/2940/umbra_nab_vs_3942.0x1500.jpg'
   }
 ];
+
+
 
 //claire falkenberg
 //https://clairefalkenberg.com/floating
