@@ -14,9 +14,9 @@ running order:
   - constructor, render, componentDidMount
 */
 
-//<i class="fas fa-heart"></i> //solid
+//<i className="fas fa-heart" size="2x"></i> //solid
 //<FontAwesomeIcon icon={faHeart} size="2x" /> //solid
-//<i class="far fa-heart"></i> //outline
+//<i className="far fa-heart"></i> //outline
 //<FontAwesomeIcon icon={['far', 'heart']} size="2x" /> //outline
 
 class App extends React.Component {
@@ -100,7 +100,7 @@ class App extends React.Component {
     if (this.state.page === 'artists') {
       //buttonClick={this.handleButtonClick}
       return (
-          <ArtistsPage value={this.state} otherPage={this.otherPage} handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} postArtists={this.postLikedArtists} />
+          <ArtistsPage value={this.state} otherPage={this.otherPage} postArtists={this.postLikedArtists} />
       );
     } else {
       //buttonClick={this.handleButtonClick}
@@ -126,31 +126,24 @@ function ArtistsPage(props) { //mapping each card individually from artistList
           Favorites
         </button>
         <div className="inner-container" id="artist-cards">
-          {props.value.ArtistList.map((artist, index) => (
-            <div>
-            <img src={artist.imageURL} key={ index }></img>
-
-            {/* <FontAwesomeIcon icon={faHeart} size="2x" /> */}
-            </div>
-          )
+          {props.value.ArtistList.map((artist, index) =>
+            <ArtistCards artist={ artist } key={ index } handleCardClick={props.handleCardClick} handleHeartToggle={props.handleHeartToggle} />
           )}
-
-          {/* <input onClick={this.handleHeartToggle}>
-            {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
-          </input> */}
         </div>
       </div>
   )
 }
 
-function Heart() {
-  return (
-  <div>
-    <FontAwesomeIcon icon={faHeart} size="2x" />
+let ArtistCards = (props) => (
+  <div className="artist-card-entry">
+    <div>
+      <img src={props.artist.imageURL}></img>
+    </div>
+    <div className="heart-icon" onClick={ () => props.handleHeartToggle(props.artist) }>
+      <FontAwesomeIcon icon={faHeart} size="2x" />
+    </div>
   </div>
-
-  )
-}
+  );
 
 function FavoritesPage(props) { //render each link from favoritesList w/map func
   return (
@@ -231,16 +224,17 @@ const ArtistList = [
 ];
 
 
+export default App;
+
+
+
+
+
+
 // ReactDOM.render(
 //   <App />,
 //   document.getElementById('root')
 // );
-
-
-
-
-
-export default App;
 
 
 // let ArtistLinks = (props) => {
@@ -250,6 +244,30 @@ export default App;
 {/* <input onClick={this.handleCardClick}>
   {props.value.isCardClicked ? '' : ''}
 </input> */}
+
+ // let ListArtists = (props) => (
+  //   <div className="inner-container" id="artist-cards">
+  //     {props.value.ArtistList.map((artist, index) =>
+  //       <ArtistCards artist={ artist } key={ index } handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} />
+  //     )}
+  //   </div>
+  // );
+
+  // onClick={ () => props.handleHeartToggle(props.artist) } //props.value.isHeartFilled
+
+  //onClick={this.handleHeartToggle}
+
+  // <div>
+  //           <img src={artist.imageURL} key={ index }></img>
+
+  //           {/* <FontAwesomeIcon icon={faHeart} size="2x" /> */}
+  //           </div>
+  //         )
+  //         )}
+
+  //         {/* <input onClick={this.handleHeartToggle}>
+  //           {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
+  //         </input> */}
 
 
 // getArtistsPage() {
@@ -401,4 +419,19 @@ export default App;
   {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
 </input>
 </div> */}
+
+{/* <div className="inner-container" id="artist-cards">
+{props.value.ArtistList.map((artist, index) => (
+  <div>
+  <img src={artist.imageURL} key={ index }></img>
+
+  {/* <FontAwesomeIcon icon={faHeart} size="2x" /> */}
+//   </div>
+// )
+// )}
+
+{/* <input onClick={this.handleHeartToggle}>
+  {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
+</input> */}
+// </div> */}
 
