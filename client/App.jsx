@@ -1,5 +1,7 @@
 import React from 'react';
-//import ReactDOM from 'react-dom';
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { farHeart } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /*
 components:
@@ -11,6 +13,11 @@ components:
 running order:
   - constructor, render, componentDidMount
 */
+
+//<i class="fas fa-heart"></i> //solid
+//<FontAwesomeIcon icon={faHeart} size="2x" /> //solid
+//<i class="far fa-heart"></i> //outline
+//<FontAwesomeIcon icon={['far', 'heart']} size="2x" /> //outline
 
 class App extends React.Component {
   constructor(props) {
@@ -49,7 +56,7 @@ class App extends React.Component {
       isCardClicked: !state.isCardClicked
     }));
   }
-  handleHeartToggle(e) {
+  handleHeartToggle(e) { //if isHeartFilled === true, postLikedArtists, else delete artist
     e.preventdefault();
     this.setState(state => ({
       isHeartFilled: !state.isHeartFilled
@@ -60,48 +67,50 @@ class App extends React.Component {
       method: 'GET'
     });
   }
-  getLikedArtists(likedArtists) {
-    let data = { likedArtists }; //this.state.likedArtists?
-    console.log('likedArtists: ', likedArtists);
+  componentDidMount() {
     fetch('/artists', {
       method: 'GET'
     })
-      .then(res => res.json())
+      .then(response => response.json())
+      .then(data => {
+        console.log('👘 data in GET: ', data);
+        this.setState({likedArtists: data})
+      })
       .catch(err => {
         console.log('error getting liked artists', err);
       });
   }
-  componentDidMount() {
-    this.postLikedArtists();
-  }
   postLikedArtists(data) { //pass in callback, then call w/data or data.result when handling res?
+    console.log('🧶 data in POST: ', data);
+    data = {likedArtists: this.state.likedArtists};
     fetch('/artists', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     })
-    .then(res => res.json())  //parses the response as JSON
-      //console.log('response: ', res);
-    .then(data => console.log('success: ', data))
-    .catch(err => {
-      console.log('error posting liked artists: ', err);
-    });
+    // .then(res => res.json())  //parses the response as JSON
+    //   console.log('response: ', res);
+    // .then(data => console.log('success: ', data))
+    // .catch(err => {
+    //   console.log('error posting liked artists: ', err);
+    // });
   }
   render() {
-    // if (this.state.page === 'artists') {
-    //   //buttonClick={this.handleButtonClick}
-    //   return (
-    //       <ArtistsPage value={this.state} otherPage={this.otherPage} handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} postArtists={this.postLikedArtists} />
-    //   );
-    // } else {
-    //   //buttonClick={this.handleButtonClick}
-    //   //handle link click?
-    //   return (
-    //     <FavoritesPage value={this.state} otherPage={this.otherPage} />
-    //   );
-    // }
+    //return <Heart/>
+    if (this.state.page === 'artists') {
+      //buttonClick={this.handleButtonClick}
+      return (
+          <ArtistsPage value={this.state} otherPage={this.otherPage} handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} postArtists={this.postLikedArtists} />
+      );
+    } else {
+      //buttonClick={this.handleButtonClick}
+      //handle link click?
+      return (
+        <FavoritesPage value={this.state} otherPage={this.otherPage} />
+      );
+    }
 
-    return <div>hello</div>
+    //return <div>hello</div>
   }
 }
 
@@ -117,12 +126,29 @@ function ArtistsPage(props) { //mapping each card individually from artistList
           Favorites
         </button>
         <div className="inner-container" id="artist-cards">
-          {props.value.ArtistList.map((artist, index) =>
+          {props.value.ArtistList.map((artist, index) => (
+            <div>
             <img src={artist.imageURL} key={ index }></img>
+
+            {/* <FontAwesomeIcon icon={faHeart} size="2x" /> */}
+            </div>
+          )
           )}
 
+          {/* <input onClick={this.handleHeartToggle}>
+            {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
+          </input> */}
         </div>
       </div>
+  )
+}
+
+function Heart() {
+  return (
+  <div>
+    <FontAwesomeIcon icon={faHeart} size="2x" />
+  </div>
+
   )
 }
 
@@ -224,6 +250,43 @@ export default App;
 {/* <input onClick={this.handleCardClick}>
   {props.value.isCardClicked ? '' : ''}
 </input> */}
+
+
+// getArtistsPage() {
+//   fetch('/', {
+//     method: 'GET'
+//   });
+// }
+// getLikedArtists() {
+//   //let data = { likedArtists }; //this.state.likedArtists?
+//   //console.log('likedArtists: ', likedArtists);
+//   fetch('/artists', {
+//     method: 'GET'
+//   })
+//     .then(response => response.json())
+//     .then(data => {
+//       this.setState({likedArtists: data})
+//     })
+//     .catch(err => {
+//       console.log('error getting liked artists', err);
+//     });
+// }
+// componentDidMount() {
+//   this.postLikedArtists();
+// }
+// postLikedArtists(data) { //pass in callback, then call w/data or data.result when handling res?
+//   fetch('/artists', {
+//     method: 'POST',
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data)
+//   })
+//   .then(res => res.json())  //parses the response as JSON
+//     console.log('response: ', res);
+//   .then(data => console.log('success: ', data))
+//   .catch(err => {
+//     console.log('error posting liked artists: ', err);
+//   });
+// }
 
 // function ToggleHeart(props) {
 //   return (

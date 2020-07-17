@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 // app.get('/artists', (req, res) => {
-//   let faves = `SELECT * FROM  `; //fill-in when db setup
+//   let faves = `SELECT * FROM likedArtistData`;
 //   db.query(faves, (err, result) => {
 //     if (err) {
 //       console.log(err);
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 // app.post('/favorites', (req, res) => {
 //   console.log('req.body: ', req.body);
-//   let faves = `INSERT INTO VALUES (?)`; //fill-in when db setup
+//   let faves = `INSERT INTO  likedArtistData(name, artistLink) VALUES (?, ?)`;
 //   db.query(faves, (err, result) => {
 //     if (err) {
 //       res.send('error posting likedArtists', err);
