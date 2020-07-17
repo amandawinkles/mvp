@@ -1,3 +1,6 @@
+import React from 'react';
+//import ReactDOM from 'react-dom';
+
 /*
 components:
 1. app - everything will be rendered, heartToggle, buttonClick, postLikedArtists to db
@@ -15,7 +18,8 @@ class App extends React.Component {
     this.state = {
       page: 'artists',
       isHeartFilled: 'false',
-      artists: artistList,
+      //artistList: this.props.artistList,
+      ArtistList: ArtistList,
       isCardClicked: false,
       //likedArtists --> {name, imageURL, artistLink, isLiked}
       likedArtists: []
@@ -56,70 +60,69 @@ class App extends React.Component {
       method: 'GET'
     });
   }
-  postLikedArtists(e) {
-    e.preventdefault();
-    fetch('/favorites', {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        artists: this.state.artists
-      })
+  getLikedArtists(likedArtists) {
+    let data = { likedArtists }; //this.state.likedArtists?
+    console.log('likedArtists: ', likedArtists);
+    fetch('/artists', {
+      method: 'GET'
     })
-    .then(res => {
-      //res.json?
-      res.json();
-      //json.parse
-      //console.log('response: ', res);
-    })
-    .then(data => {
-      console.log('success: ', data);
-    })
-    .catch(err => {
-      console.log('error posting liked artists: ', err);
-    })
+      .then(res => res.json())
+      .catch(err => {
+        console.log('error getting liked artists', err);
+      });
   }
   componentDidMount() {
     this.postLikedArtists();
   }
+  postLikedArtists(data) { //pass in callback, then call w/data or data.result when handling res?
+    fetch('/artists', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())  //parses the response as JSON
+      //console.log('response: ', res);
+    .then(data => console.log('success: ', data))
+    .catch(err => {
+      console.log('error posting liked artists: ', err);
+    });
+  }
   render() {
-   if (this.state.page === 'artists') {
-     //buttonClick={this.handleButtonClick}
-     return (
-      <div>
-        <ArtistsPage value={this.state} otherPage={this.otherPage} handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} postArtists={this.postLikedArtists} />
-      </div>
-     );
-   }
-   if (this.state.page === 'favorites') {
-     //buttonClick={this.handleButtonClick}
-     //handle link click?
-     return <FavoritesPage value={this.state} otherPage={this.otherPage} />
-   }
+    // if (this.state.page === 'artists') {
+    //   //buttonClick={this.handleButtonClick}
+    //   return (
+    //       <ArtistsPage value={this.state} otherPage={this.otherPage} handleCardClick={this.handleCardClick} handleHeartToggle={this.handleHeartToggle} postArtists={this.postLikedArtists} />
+    //   );
+    // } else {
+    //   //buttonClick={this.handleButtonClick}
+    //   //handle link click?
+    //   return (
+    //     <FavoritesPage value={this.state} otherPage={this.otherPage} />
+    //   );
+    // }
+
+    return <div>hello</div>
   }
 }
 
 function ArtistsPage(props) { //mapping each card individually from artistList
+  console.log('App props', props);
   return (
-    <div className="container">
-      <h1 className="page-title">Artists</h1>
-      <button className="button" type="button"
-        onClick={(e) => {
-          props.otherPage('favorites');
-        }}>
-        Favorites
-      </button>
-      <div className="inner-container" id="artist-cards">
-        {props.artists.map((artist, index) => {
-          return <ArtistLinks artist={ artist } key={ index } handleHeartToggle={props.handleHeartToggle} />;
-        })}
-        <input onClick={this.handleHeartToggle}>
-          {this.state.isHeartFilled ? <div classname="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div classname="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
-        </input>
-        <input onClick={this.handleCardClick}>
-          {this.state.isCardClicked ? '' : ''}
-        </input>
+      <div className="container">
+        <h1 className="page-title">Artists</h1>
+        <button className="button" type="button"
+          onClick={(e) => {
+            props.otherPage('favorites');
+          }}>
+          Favorites
+        </button>
+        <div className="inner-container" id="artist-cards">
+          {props.value.ArtistList.map((artist, index) =>
+            <img src={artist.imageURL} key={ index }></img>
+          )}
+
+        </div>
       </div>
-    </div>
   )
 }
 
@@ -134,25 +137,93 @@ function FavoritesPage(props) { //render each link from favoritesList w/map func
         Artists
       </button>
       <div className="inner-container" id="artist-links">
-        {props.artists.map((artist, index) => {
-          return <ArtistLinks artist={ artist } key={ index } />;
+        {props.ArtistList.map((artist) => {
+          return (
+            <div>{artist.name, artist.artistLink}</div>
+          );
         })}
-
       </div>
     </div>
-  )
+  );
 }
 
-let ArtistLinks = (props) => {
+const ArtistList = [
+  {
+    name: 'letha wilson',
+    imageURL: 'https://www.lethaprojects.com/visuals/images/outdoors/ghostofatree-right-view.jpg',
+    artistLink: "https://www.lethaprojects.com",
+    isLiked: false
+  },
+  {
+    name: 'genesis baez',
+    imageURL: 'http://media.virbcdn.com/cdn_images/resize_1600x1600/23/ac1718b745965aed-Baez_1.jpg',
+    artistLink: "http://www.genesisbaez.com/",
+    isLiked: false
+  },
+  {
+    name: 'sarah-louise barbett',
+    imageURL: 'https://aisselles.files.wordpress.com/2010/12/img_0016.jpg?w=1104',
+    artistLink: "https://aisselles.files.wordpress.com",
+    isLiked: false
+  },
+  {
+    name: 'jessica halonen',
+    imageURL: 'http://www.jessicahalonen.com/files/gimgs/44_spliced-branch-ball-1.jpg',
+    artistLink: "http://www.jessicahalonen.com",
+    isLiked: false
+  },
+  {
+    name: 'laura owens',
+    imageURL: 'https://www.owenslaura.com/wp-content/uploads/2013/01/HQ-16LO9359P-Untitled.jpg',
+    artistLink: "https://www.owenslaura.com",
+    isLiked: false
+  },
+  {
+    name: 'deborah roberts',
+    imageURL: 'https://i0.wp.com/conflictofinteresttx.com/wp-content/uploads/2017/07/The-Power-dance-30x22-2017.jpeg?w=469',
+    artistLink: "http://www.deborahrobertsart.com/",
+    isLiked: false
+  },
+  {
+    name: 'ana esteve llorens',
+    imageURL: 'http://www.anaestevellorens.com/projects/project6/07%20Quasy%20Infinite.jpg',
+    artistLink: "http://www.anaestevellorens.com",
+    isLiked: false
+  },
+  {
+    name: 'jackie furtado',
+    imageURL: 'https://s3.amazonaws.com/artfare-production-mobile/Artworks/Images/Image-1/image-1-d67b0616-077b-4fee-97be-275e4dde6107.jpg',
+    artistLink: "https://jackiefurtado.com/",
+    isLiked: false
+  },
+  {
+    name: 'viviane sassen',
+    imageURL: 'https://www.vivianesassen.com/site/assets/files/2940/umbra_nab_vs_3942.0x1500.jpg',
+    artistLink: "https://www.vivianesassen.com",
+    isLiked: false
+  }
+];
 
-}
+
+// ReactDOM.render(
+//   <App />,
+//   document.getElementById('root')
+// );
 
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
 
+
+
+export default App;
+
+
+// let ArtistLinks = (props) => {
+
+// }
+
+{/* <input onClick={this.handleCardClick}>
+  {props.value.isCardClicked ? '' : ''}
+</input> */}
 
 // function ToggleHeart(props) {
 //   return (
@@ -188,6 +259,29 @@ ReactDOM.render(
 //   }
 // }
 
+// postLikedArtists() { //not front end event, so can't use e
+//   //e.preventdefault();
+//     fetch('/favorites', {
+//       method: 'POST',
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         ArtistList: this.state.ArtistList
+//       })
+//     })
+//     .then(res => {
+//       //console.log('response: ', res);
+//       //let parsedReq = JSON.parse(req.body);
+//       res.json();
+//       //JSON.parse --> is it already parsed becuase of bodyParser?
+//     })
+//     .then(data => {
+//       console.log('success: ', data);
+//     })
+//     .catch(err => {
+//       console.log('error posting liked artists: ', err);
+//     })
+//   }
+
 // class ArtistCards extends React.Component {
 //   constructor(props) {
 //     super(props);
@@ -212,6 +306,15 @@ ReactDOM.render(
 //   }
 // }
 
+// {props.value.artistList.map(artist, (artist, index) => { //element, then func run on each el
+//   return <artistList artist={ artist } key={ index } handleHeartToggle={props.handleHeartToggle} />;
+// })}
+
+// {props.artistList.map(artist, (artist, index) => {
+//   return <ArtistList artist={ artist } key={ index } />;
+// })}
+
+//let parsedReq = JSON.parse(req.body);
 
 
 // function Welcome(props) {
@@ -225,3 +328,14 @@ ReactDOM.render(
 //   element,
 //   document.getElementById('root')
 // );
+
+
+{/* <div className="inner-container" id="artist-cards">
+{props.value.ArtistList.map((artist) =>  //element, then func run on each el
+  <div>{artist.imageURL}<div/>
+)}
+<input onClick={this.handleHeartToggle}>
+  {props.value.isHeartFilled ? <div className="heart"><a href="#"><i className="fa fa-heart fa-2x"></i></a></div> : <div className="heart"><a href="#"><i className="fa fa-heart-o fa-2x"></i></a></div>}
+</input>
+</div> */}
+
