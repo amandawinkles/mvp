@@ -3,31 +3,13 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { farHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-/*
-components:
-1. app - everything will be rendered, heartToggle, buttonClick, postLikedArtists to db
-2. pages - container components, render other components inside
-3. artist cards - mapping each card individually from artistList
-4. favorites - render each link from favoritesList w/map func
-
-running order:
-  - constructor, render, componentDidMount
-*/
-
-//<i className="fas fa-heart" size="2x"></i> //solid
-//<FontAwesomeIcon icon={faHeart} size="2x" /> //solid
-//<i className="far fa-heart"></i> //outline
-//<FontAwesomeIcon icon={['far', 'heart']} size="2x" /> //outline
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 'artists',
-      //isHeartFilled: 'false',
       ArtistList: ArtistList,
       isCardClicked: false,
-      //likedArtists --> {name, imageURL, artistLink, isLiked}
       likedArtists: []
     };
     this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -55,50 +37,23 @@ class App extends React.Component {
       isCardClicked: !state.isCardClicked
     }));
   }
-  // handleHeartToggle(ArtistList, artist) { //isLiked
-
-  //   //e.preventdefault();
-  //   //ifArtistIsLiked(ArtistList, artist);
-  //   this.setState(state => ({
-  //     //isHeartFilled: !state.isHeartFilled
-  //   }));
-  //   //if isHeartFilled === true, postLikedArtists, else delete artist
-  // }
   handleHeartToggle(ArtistList, artist) {
     console.log('🦋 artist: ', artist);
+    //if artist.isLiked === true, postLikedArtists, else delete artist
     if (artist.isLiked === false) {
       artist.isLiked = true;
     } else {
       artist.isLiked = false;
     }
-    //modify artist by changing isLiked: true
-      //copy ArtistList array
-        //new array = ArtistList.slice()
-        let copyList = ArtistList.slice();
-        console.log('🐯 copyList: ', copyList);
-        artist = copyList[artist];
-        //map through copyList
-          //if (copyList[index] === modArtistObj)
-    //replace artist toggled w/new modified artist obj
-      //artist = modArtistObj
-      //copyList.filter(artist => artist === modArtistObj)
-      //<ArtistList artistObj={ artist } key={ index } />
-      //<ArtistList artistObj={ artistObj } key={ index } />
-      //map ArtistList, locate artist, set artist = modArtistObj
-      // let newList = copyList.map((artistObj, index) => {
-      //   if (copyList[index] === modArtistObj) {
-      //     return artistObj={ modArtistObj } key={ index };
-      //   } else {
-      //     return artistObj={ artistObj } key={ index };
-      //   }
-      // });
-       //this.setState w/new array for ArtistList
-      //console.log('artist list state: ', ArtistList);
-      function handler(e) {
-        e.preventdefault();
-        this.setState(state => ({ ArtistList: copyList }));
-      }
-      console.log('artist list after state: ', ArtistList);
+    let copyList = ArtistList.slice();
+    console.log('🐯 copyList: ', copyList);
+    artist = copyList[artist];
+
+    function handler(e) {
+      e.preventdefault();
+      this.setState(state => ({ ArtistList: copyList }));
+    }
+    console.log('artist list after state: ', ArtistList);
   }
   getArtistsPage() {
     fetch('/', {
@@ -134,7 +89,6 @@ class App extends React.Component {
     // });
   }
   render() {
-    //return <Heart/>
     if (this.state.page === 'artists') {
       //buttonClick={this.handleButtonClick}
       return (
@@ -147,12 +101,11 @@ class App extends React.Component {
         <FavoritesPage value={this.state} otherPage={this.otherPage} />
       );
     }
-
-    //return <div>hello</div>
   }
 }
 
-function ArtistsPage(props) { //mapping each card individually from artistList
+//mapping each card individually from artistList
+function ArtistsPage(props) {
   console.log('App props', props);
   return (
       <div className="container">
@@ -180,14 +133,13 @@ function ArtistCards(props) {
         <img src={props.artist.imageURL}></img>
       </div>
       <div className="heart-icon" onClick={(e) => (props.handleHeartToggle(ArtistList, props.artist))}>
+        <a href="#">
         <FontAwesomeIcon icon={faHeart} size="2x" />
+        </a>
       </div>
     </div>
   );
   }
-
-  //ifArtistIsLiked
-  //props.value.ArtistList
 
 function FavoritesPage(props) { //render each link from favoritesList w/map func
   return (
@@ -210,7 +162,7 @@ function FavoritesPage(props) { //render each link from favoritesList w/map func
   );
 }
 
-const ArtistList = [ //artist[key].isLiked = true
+const ArtistList = [
   {
     name: 'letha wilson',
     imageURL: 'https://www.lethaprojects.com/visuals/images/outdoors/ghostofatree-right-view.jpg',
@@ -271,7 +223,21 @@ const ArtistList = [ //artist[key].isLiked = true
 export default App;
 
 
+/*
+components:
+1. app - everything will be rendered, heartToggle, buttonClick, postLikedArtists to db
+2. pages - container components, render other components inside
+3. artist cards - mapping each card individually from artistList
+4. favorites - render each link from favoritesList w/map func
 
+running order:
+  - constructor, render, componentDidMount
+*/
+
+//<i className="fas fa-heart" size="2x"></i> //solid
+//<FontAwesomeIcon icon={faHeart} size="2x" /> //solid
+//<i className="far fa-heart"></i> //outline
+//<FontAwesomeIcon icon={['far', 'heart']} size="2x" /> //outline
 
 
 
@@ -519,3 +485,40 @@ export default App;
         //console.log(' copyList2: ', copyList);
         //modArtistObj = variable[artist]
         //let modArtistObj = copyList[artist];
+
+        // handleHeartToggle(ArtistList, artist) {
+        //   console.log(' artist: ', artist);
+        //   if (artist.isLiked === false) {
+        //     artist.isLiked = true;
+        //   } else {
+        //     artist.isLiked = false;
+        //   }
+        //   //modify artist by changing isLiked: true
+        //     //copy ArtistList array
+        //       //new array = ArtistList.slice()
+        //       let copyList = ArtistList.slice();
+        //       console.log(' copyList: ', copyList);
+        //       artist = copyList[artist];
+        //       //map through copyList
+        //         //if (copyList[index] === modArtistObj)
+        //   //replace artist toggled w/new modified artist obj
+        //     //artist = modArtistObj
+        //     //copyList.filter(artist => artist === modArtistObj)
+        //     //<ArtistList artistObj={ artist } key={ index } />
+        //     //<ArtistList artistObj={ artistObj } key={ index } />
+        //     //map ArtistList, locate artist, set artist = modArtistObj
+        //     // let newList = copyList.map((artistObj, index) => {
+        //     //   if (copyList[index] === modArtistObj) {
+        //     //     return artistObj={ modArtistObj } key={ index };
+        //     //   } else {
+        //     //     return artistObj={ artistObj } key={ index };
+        //     //   }
+        //     // });
+        //      //this.setState w/new array for ArtistList
+        //     //console.log('artist list state: ', ArtistList);
+        //     function handler(e) {
+        //       e.preventdefault();
+        //       this.setState(state => ({ ArtistList: copyList }));
+        //     }
+        //     console.log('artist list after state: ', ArtistList);
+        // }
