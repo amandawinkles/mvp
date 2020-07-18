@@ -24,8 +24,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       page: 'artists',
-      isHeartFilled: 'false',
-      //artistList: this.props.artistList,
+      //isHeartFilled: 'false',
       ArtistList: ArtistList,
       isCardClicked: false,
       //likedArtists --> {name, imageURL, artistLink, isLiked}
@@ -56,11 +55,50 @@ class App extends React.Component {
       isCardClicked: !state.isCardClicked
     }));
   }
-  handleHeartToggle(e) { //if isHeartFilled === true, postLikedArtists, else delete artist
-    e.preventdefault();
-    this.setState(state => ({
-      isHeartFilled: !state.isHeartFilled
-    }));
+  // handleHeartToggle(ArtistList, artist) { //isLiked
+
+  //   //e.preventdefault();
+  //   //ifArtistIsLiked(ArtistList, artist);
+  //   this.setState(state => ({
+  //     //isHeartFilled: !state.isHeartFilled
+  //   }));
+  //   //if isHeartFilled === true, postLikedArtists, else delete artist
+  // }
+  handleHeartToggle(ArtistList, artist) {
+    console.log('🦋 artist: ', artist);
+    if (artist.isLiked === false) {
+      artist.isLiked = true;
+    } else {
+      artist.isLiked = false;
+    }
+    //modify artist by changing isLiked: true
+      //copy ArtistList array
+        //new array = ArtistList.slice()
+        let copyList = ArtistList.slice();
+        console.log('🐯 copyList: ', copyList);
+        artist = copyList[artist];
+        //map through copyList
+          //if (copyList[index] === modArtistObj)
+    //replace artist toggled w/new modified artist obj
+      //artist = modArtistObj
+      //copyList.filter(artist => artist === modArtistObj)
+      //<ArtistList artistObj={ artist } key={ index } />
+      //<ArtistList artistObj={ artistObj } key={ index } />
+      //map ArtistList, locate artist, set artist = modArtistObj
+      // let newList = copyList.map((artistObj, index) => {
+      //   if (copyList[index] === modArtistObj) {
+      //     return artistObj={ modArtistObj } key={ index };
+      //   } else {
+      //     return artistObj={ artistObj } key={ index };
+      //   }
+      // });
+       //this.setState w/new array for ArtistList
+      //console.log('artist list state: ', ArtistList);
+      function handler(e) {
+        e.preventdefault();
+        this.setState(state => ({ ArtistList: copyList }));
+      }
+      console.log('artist list after state: ', ArtistList);
   }
   getArtistsPage() {
     fetch('/', {
@@ -100,7 +138,7 @@ class App extends React.Component {
     if (this.state.page === 'artists') {
       //buttonClick={this.handleButtonClick}
       return (
-          <ArtistsPage value={this.state} otherPage={this.otherPage} postArtists={this.postLikedArtists} />
+          <ArtistsPage value={this.state} otherPage={this.otherPage} postArtists={this.postLikedArtists} handleHeartToggle={this.handleHeartToggle} handleCardClick={this.handleCardClick} />
       );
     } else {
       //buttonClick={this.handleButtonClick}
@@ -134,16 +172,22 @@ function ArtistsPage(props) { //mapping each card individually from artistList
   )
 }
 
-let ArtistCards = (props) => (
-  <div className="artist-card-entry">
-    <div>
-      <img src={props.artist.imageURL}></img>
+function ArtistCards(props) {
+  console.log('props from ArtistCards 🦊', props)
+  return (
+    <div className="artist-card-entry">
+      <div>
+        <img src={props.artist.imageURL}></img>
+      </div>
+      <div className="heart-icon" onClick={(e) => (props.handleHeartToggle(ArtistList, props.artist))}>
+        <FontAwesomeIcon icon={faHeart} size="2x" />
+      </div>
     </div>
-    <div className="heart-icon" onClick={ () => props.handleHeartToggle(props.artist) }>
-      <FontAwesomeIcon icon={faHeart} size="2x" />
-    </div>
-  </div>
   );
+  }
+
+  //ifArtistIsLiked
+  //props.value.ArtistList
 
 function FavoritesPage(props) { //render each link from favoritesList w/map func
   return (
@@ -166,7 +210,7 @@ function FavoritesPage(props) { //render each link from favoritesList w/map func
   );
 }
 
-const ArtistList = [
+const ArtistList = [ //artist[key].isLiked = true
   {
     name: 'letha wilson',
     imageURL: 'https://www.lethaprojects.com/visuals/images/outdoors/ghostofatree-right-view.jpg',
@@ -244,6 +288,20 @@ export default App;
 {/* <input onClick={this.handleCardClick}>
   {props.value.isCardClicked ? '' : ''}
 </input> */}
+
+//this.props.handleHeartToggle(this.props.value.isHeartFilled)
+//onClick={ () => props.handleHeartToggle(props.artist) }
+
+// let ArtistCards = (props) => (
+//   <div className="artist-card-entry">
+//     <div>
+//       <img src={props.artist.imageURL}></img>
+//     </div>
+//     <div className="heart-icon" onClick={ () => props.handleHeartToggle(props.artist) }>
+//       <FontAwesomeIcon icon={faHeart} size="2x" />
+//     </div>
+//   </div>
+//   );
 
  // let ListArtists = (props) => (
   //   <div className="inner-container" id="artist-cards">
@@ -435,3 +493,29 @@ export default App;
 </input> */}
 // </div> */}
 
+// let ArtistCards = (props) => (
+//   //console.log('props from ArtistCards 🦊', props)
+//   <div className="artist-card-entry">
+//     <div>
+//       <img src={props.artist.imageURL}></img>
+//     </div>
+//     <div className="heart-icon" onClick={props.handleHeartClick(props.artist)}>
+//       <FontAwesomeIcon icon={faHeart} size="2x" />
+//     </div>
+//   </div>
+//   );
+
+//variable = this.state.ArtistList
+        //let listState = this.state.ArtistList;
+        //let modArtistObj = Object.assign({}, artist);
+        // if (modArtistObj.isLiked === false) {
+        //   modArtistObj.isLiked = true;
+        // } else {
+        //   modArtistObj.isLiked = false;
+        // }
+        //copyList[modArtistObj]
+        //this.state.ArtistList
+
+        //console.log(' copyList2: ', copyList);
+        //modArtistObj = variable[artist]
+        //let modArtistObj = copyList[artist];
