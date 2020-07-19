@@ -46,7 +46,7 @@ class App extends React.Component {
       artist.isLiked = false;
     }
     let copyList = ArtistList.slice();
-    console.log('🐯 copyList: ', copyList);
+    //console.log('🐯 copyList: ', copyList);
     artist = copyList[artist];
 
     function handler(e) {
@@ -106,7 +106,7 @@ class App extends React.Component {
 
 //mapping each card individually from artistList
 function ArtistsPage(props) {
-  console.log('App props', props);
+  //console.log('App props', props);
   return (
       <div className="container">
         <h1 className="page-title">Artists</h1>
@@ -126,7 +126,7 @@ function ArtistsPage(props) {
 }
 
 function ArtistCards(props) {
-  console.log('props from ArtistCards 🦊', props)
+  //console.log('props from ArtistCards 🦊', props)
   return (
     <div className="artist-card-entry">
       <div>
